@@ -4,6 +4,7 @@ import com.itextpdf.kernel.colors.DeviceRgb
 import com.itextpdf.layout.element.BlockElement
 import com.julianjarecki.ettiketten.app.utils.BidirectionalConversionBinding
 import javafx.beans.property.DoubleProperty
+import javafx.beans.property.Property
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
@@ -19,7 +20,7 @@ var BlockElement<*>.fontColor: Color
     }
 
 
-class PointConversionBinding(pointProp: DoubleProperty, prop: DoubleProperty, val unit: ObservableValue<Units>) :
+class PointConversionBinding(pointProp: Property<Number>, prop: Property<Number>, val unit: ObservableValue<Units>) :
     BidirectionalConversionBinding<Number, Number>(pointProp, prop) {
     override fun convertStoT(s: Number): Number = s.toDouble() / (unit.value?.points ?: 1.0)
     override fun convertTtoS(t: Number): Number = t.toDouble() * (unit.value?.points ?: 1.0)
@@ -40,7 +41,7 @@ class PointConversionBinding(pointProp: DoubleProperty, prop: DoubleProperty, va
 
 //PointConversionBinding
 
-class ConvertedDoubleProperty(val unit: ObservableValue<Units>, val sourceProp: DoubleProperty) :
+class ConvertedDoubleProperty(val unit: ObservableValue<Units>, sourceProp: Property<Number>) :
     SimpleDoubleProperty() {
     val binding: PointConversionBinding = PointConversionBinding(sourceProp, this, unit)
 
@@ -50,4 +51,4 @@ class ConvertedDoubleProperty(val unit: ObservableValue<Units>, val sourceProp: 
 }
 
 
-fun DoubleProperty.convertUnits(unit: ObservableValue<Units>) = ConvertedDoubleProperty(unit, this)
+fun Property<Number>.convertUnits(unit: ObservableValue<Units>) = ConvertedDoubleProperty(unit, this)

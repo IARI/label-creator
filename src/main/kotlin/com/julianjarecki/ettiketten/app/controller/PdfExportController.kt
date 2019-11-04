@@ -100,7 +100,7 @@ class PdfExportController : Controller() {
 
     private val LabelsDocumentDataModel.eData: EffectiveLabelsData
         get() {
-            val ps = pageSize.value.pageSize
+            val ps = item.pageSize.pageSize
             var offseth = offsetH.value.toFloat()
             var offsetv = offsetV.value.toFloat()
             var lheight = labelHeight.value.toFloat()

@@ -10,20 +10,15 @@ import com.julianjarecki.ettiketten.app.utils.*
 import com.julianjarecki.ettiketten.app.utils.itext.BorderStyle
 import com.julianjarecki.ettiketten.app.utils.itext.Fonts
 import com.julianjarecki.ettiketten.app.utils.itext.Units
-import com.julianjarecki.ettiketten.app.utils.itext.convertUnits
-import com.julianjarecki.ettiketten.styles.Styles
 import com.julianjarecki.ettiketten.view.base.AppTab
 import com.julianjarecki.ettiketten.view.fragments.LabelContentFragment
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
-import de.jensd.fx.glyphs.materialicons.MaterialIcon
-import javafx.scene.Parent
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Priority
-import javafx.scene.paint.Color
 import tornadofx.*
 
 class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
@@ -69,12 +64,12 @@ class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
                             combobox(data.units, Units.values().toList())
                         }
                         field("Page size") {
-                            textfield(data.pageSize.select(PageSize::width))
-                            textfield(data.pageSize.select(PageSize::height))
+                            textfield(data.pageWidth)
+                            textfield(data.pageHeight)
                             //pageSize
                             button("", MaterialDesignIcon.SCREEN_ROTATION.view) {
                                 action {
-                                    data.pageSize.value.width.swapValueWith(data.pageSize.value.height)
+                                    data.pageWidth.swapValueWith(data.pageHeight)
                                 }
                             }
                         }

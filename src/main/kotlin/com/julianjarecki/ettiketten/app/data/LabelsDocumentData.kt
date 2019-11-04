@@ -71,8 +71,11 @@ class LabelsDocumentData {
 
 class LabelsDocumentDataModel : ItemViewModel<LabelsDocumentData>() {
     val title = bind(LabelsDocumentData::title)
-    val pageSize = bind(LabelsDocumentData::pageSize)
     val units = bind<Units, SimpleObjectProperty<Units>, SimpleObjectProperty<Units>>(LabelsDocumentData::units)
+    val pageWidth =
+        bind<SimpleFloatProperty, Number, SimpleFloatProperty> { item?.pageSize?.width }.convertUnits(units)
+    val pageHeight =
+        bind<SimpleFloatProperty, Number, SimpleFloatProperty> { item?.pageSize?.height }.convertUnits(units)
     val columns = bind<Number, SimpleIntegerProperty, SimpleIntegerProperty>(LabelsDocumentData::columns)
     val rows = bind<Number, SimpleIntegerProperty, SimpleIntegerProperty>(LabelsDocumentData::rows)
     val count = bind<Number, SimpleIntegerProperty, SimpleIntegerProperty>(LabelsDocumentData::count)
