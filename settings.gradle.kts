@@ -1,4 +1,4 @@
-pluginManagement({
+pluginManagement {
     resolutionStrategy {
         eachPlugin {
             if (requested.id.id == "kotlinx-serialization") {
@@ -8,12 +8,13 @@ pluginManagement({
         }
     }
     repositories {
+        jcenter()
         gradlePluginPortal()
-        maven { url "https://kotlin.bintray.com/kotlinx" }
+        maven("https://kotlin.bintray.com/kotlinx")
         mavenLocal()
         mavenCentral()
     }
-})
+}
 
-rootProject.name = 'LabelCreator'
+rootProject.name = "LabelCreator"
 
