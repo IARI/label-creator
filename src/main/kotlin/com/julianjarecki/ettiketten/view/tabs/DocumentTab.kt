@@ -6,6 +6,7 @@ import com.julianjarecki.ettiketten.app.data.LabelContent
 import com.julianjarecki.ettiketten.app.data.LabelsDocumentDataModel
 import com.julianjarecki.ettiketten.app.data.LabelsDocumentModel
 import com.julianjarecki.ettiketten.app.utils.*
+import com.julianjarecki.ettiketten.app.utils.plus
 import com.julianjarecki.ettiketten.app.utils.itext.BorderStyle
 import com.julianjarecki.ettiketten.app.utils.itext.Fonts
 import com.julianjarecki.ettiketten.app.utils.itext.Units
