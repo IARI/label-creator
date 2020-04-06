@@ -9,6 +9,8 @@ import com.julianjarecki.ettiketten.app.utils.*
 import com.julianjarecki.ettiketten.view.base.AppTab
 import com.julianjarecki.ettiketten.view.tabs.KnownDocuments
 import com.julianjarecki.ettiketten.view.tabs.SettingsTab
+import com.julianjarecki.tfxserializer.utils.circleNext
+import com.julianjarecki.tfxserializer.utils.circlePrev
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import javafx.event.Event
 import javafx.geometry.Orientation

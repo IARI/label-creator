@@ -1,15 +1,14 @@
 package com.julianjarecki.ettiketten.app.data
 
-import com.julianjarecki.ettiketten.app.fxproperties.FileProperty
-import com.julianjarecki.ettiketten.app.fxproperties.ObjectPropertySerializer
-import com.julianjarecki.ettiketten.app.fxproperties.ObservableListSerializer
 import com.julianjarecki.ettiketten.app.utils.itext.Units
-import com.julianjarecki.ettiketten.app.utils.userHomeDir
+import com.julianjarecki.tfxserializer.app.fxproperties.ObjectPropertySerializer
+import com.julianjarecki.tfxserializer.app.fxproperties.ObservableListSerializer
+import com.julianjarecki.tfxserializer.fxproperties.FileProperty
+import com.julianjarecki.tfxserializer.utils.userHomeDir
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.stage.Screen
 import kotlinx.serialization.ContextualSerialization
 import kotlinx.serialization.Serializable
 import tornadofx.ItemViewModel

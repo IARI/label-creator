@@ -2,8 +2,7 @@ package com.julianjarecki.ettiketten.app.utils.itext
 
 import com.itextpdf.kernel.colors.DeviceRgb
 import com.itextpdf.layout.element.BlockElement
-import com.julianjarecki.ettiketten.app.utils.BidirectionalConversionBinding
-import javafx.beans.property.DoubleProperty
+import com.julianjarecki.tfxserializer.utils.BidirectionalConversionBinding
 import javafx.beans.property.Property
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.value.ChangeListener

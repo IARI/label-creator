@@ -1,12 +1,12 @@
 package com.julianjarecki.ettiketten.app.data
 
-import com.julianjarecki.ettiketten.app.fxproperties.ColorProperty
-import com.julianjarecki.ettiketten.app.fxproperties.ObjectPropertySerializer
-import com.julianjarecki.ettiketten.app.fxproperties.ObservableListSerializer
 import com.julianjarecki.ettiketten.app.utils.itext.BorderStyle
 import com.julianjarecki.ettiketten.app.utils.itext.Fonts
 import com.julianjarecki.ettiketten.app.utils.itext.Units
 import com.julianjarecki.ettiketten.app.utils.itext.convertUnits
+import com.julianjarecki.tfxserializer.app.fxproperties.ObjectPropertySerializer
+import com.julianjarecki.tfxserializer.app.fxproperties.ObservableListSerializer
+import com.julianjarecki.tfxserializer.fxproperties.ColorProperty
 import javafx.beans.property.*
 import javafx.scene.paint.Color
 import kotlinx.serialization.ContextualSerialization
@@ -107,7 +107,7 @@ class LabelsDocumentDataModel : ItemViewModel<LabelsDocumentData>() {
         data.onChange {
             dataByUUID.clear()
             it?.forEach {
-                dataByUUID.set(it.uuid, it)
+                dataByUUID[it.uuid] = it
             }
         }
     }

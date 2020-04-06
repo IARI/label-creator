@@ -5,13 +5,15 @@ import com.julianjarecki.ettiketten.app.controller.exportPdf
 import com.julianjarecki.ettiketten.app.data.LabelContent
 import com.julianjarecki.ettiketten.app.data.LabelsDocumentDataModel
 import com.julianjarecki.ettiketten.app.data.LabelsDocumentModel
-import com.julianjarecki.ettiketten.app.data.PageSize
 import com.julianjarecki.ettiketten.app.utils.*
 import com.julianjarecki.ettiketten.app.utils.itext.BorderStyle
 import com.julianjarecki.ettiketten.app.utils.itext.Fonts
 import com.julianjarecki.ettiketten.app.utils.itext.Units
 import com.julianjarecki.ettiketten.view.base.AppTab
 import com.julianjarecki.ettiketten.view.fragments.LabelContentFragment
+import com.julianjarecki.tfxserializer.utils.openWithDefaultApp
+import com.julianjarecki.tfxserializer.utils.starIfDirty
+import com.julianjarecki.tfxserializer.utils.swapValueWith
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import javafx.scene.control.SelectionMode

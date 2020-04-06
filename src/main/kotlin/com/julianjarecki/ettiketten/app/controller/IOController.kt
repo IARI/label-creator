@@ -2,14 +2,15 @@ package com.julianjarecki.ettiketten.app.controller
 
 import com.julianjarecki.ettiketten.app.EttikettenApp
 import com.julianjarecki.ettiketten.app.data.*
-import com.julianjarecki.ettiketten.app.fxproperties.FileProperty
-import com.julianjarecki.ettiketten.app.fxproperties.jfxJsonSerializer
 import com.julianjarecki.ettiketten.app.utils.*
+import com.julianjarecki.ettiketten.app.utils.labelsExtension
 import com.julianjarecki.ettiketten.view.tabs.DocumentTab
+import com.julianjarecki.tfxserializer.app.fxproperties.jfxJsonSerializer
+import com.julianjarecki.tfxserializer.fxproperties.FileProperty
+import com.julianjarecki.tfxserializer.utils.*
 import javafx.scene.image.Image
 import tornadofx.*
 import java.nio.file.*
-import kotlin.reflect.full.createInstance
 
 class IOController : Controller() {
     val applicationSettingsPath = FileProperty(

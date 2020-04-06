@@ -16,10 +16,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
-val splitComponentsPatternRegex = """^(?<indent>\s*)//\s*/+\s*$\s*//\s*(?<compName>[^\r\n]*?)$(?<params>.*?)^\s*//\s*-+\s*${'$'}"""
-        .toRegex(setOf(RegexOption.MULTILINE, RegexOption.DOT_MATCHES_ALL))
-        .toPattern()
-
 inline fun Boolean.ifTrue(action: () -> Unit) {
     run { if (this) action() }
 }
@@ -122,8 +118,6 @@ fun <T> ObservableList<T>.syncWith(iterable: Iterable<T>, equals: (T, T) -> Bool
         }
     }
 }
-
-//fun <E, F> ObservableList<F>.mapped(mapper: (F) -> E) = MappedList<E, F>(this, mapper)
 
 fun String.increaseOrAddLastDigit(): String {
     val lastDigitRange = (indexOfLast { !it.isDigit() } + 1)..(length - 1)

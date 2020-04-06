@@ -1,10 +1,10 @@
-val kotlinVersion = "1.3.50"
+val kotlinVersion = "1.3.71"
 val mainClass = "com.julianjarecki.ettiketten.app.EttikettenApp"
 
 plugins {
     id("com.github.johnrengelman.shadow") version "5.1.0"
-    id("kotlinx-serialization") version "1.3.50"
-    id("org.jetbrains.kotlin.jvm") version "1.3.50"
+    id("kotlinx-serialization") version "1.3.71"
+    id("org.jetbrains.kotlin.jvm") version "1.3.71"
 
     application
     id("edu.sc.seis.launch4j") version "2.4.6"
@@ -21,11 +21,14 @@ repositories {
 dependencies {
     testCompile("io.kotlintest:kotlintest-runner-junit5:3.3.2")
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
-    compile("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.10.0")
+    compile("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
 
     compile("no.tornado:tornadofx:1.7.20")
     //compile 'org.controlsfx:controlsfx:9.0.0'
     //compile("org.controlsfx:controlsfx:8.40.15")
+
+    // use tfx serializer to serialize javafx prooperties
+    compile("com.julianjarecki:TFXserializer:1.0.0-alpha-1")
 
     //compile 'de.jensd:fontawesomefx:8.15.0'
     compile("de.jensd:fontawesomefx-commons:8.15")

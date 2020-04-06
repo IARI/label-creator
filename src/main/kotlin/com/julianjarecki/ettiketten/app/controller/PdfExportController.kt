@@ -13,7 +13,7 @@ import com.julianjarecki.ettiketten.app.data.LabelsDocumentDataModel
 import com.julianjarecki.ettiketten.app.data.LabelsDocumentModel
 import com.julianjarecki.ettiketten.app.data.TextContent
 import com.julianjarecki.ettiketten.app.utils.itext.*
-import com.julianjarecki.ettiketten.app.utils.replaceExtension
+import com.julianjarecki.tfxserializer.utils.replaceExtension
 import tornadofx.Controller
 import java.io.File
 import kotlin.math.min

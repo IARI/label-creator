@@ -3,7 +3,7 @@ package com.julianjarecki.ettiketten.view.fragments
 import com.julianjarecki.ettiketten.app.data.LabelsDocument
 import com.julianjarecki.ettiketten.app.data.LabelsDocumentData
 import com.julianjarecki.ettiketten.app.data.LabelsDocumentModel
-import com.julianjarecki.ettiketten.app.utils.absolutePath
+import com.julianjarecki.tfxserializer.utils.absolutePath
 import javafx.beans.property.ObjectProperty
 import tornadofx.*
 

@@ -1,6 +1,6 @@
 package com.julianjarecki.ettiketten.app.data
 
-import com.julianjarecki.ettiketten.app.fxproperties.ColorProperty
+import com.julianjarecki.tfxserializer.fxproperties.ColorProperty
 import javafx.beans.property.*
 import kotlinx.serialization.ContextualSerialization
 import kotlinx.serialization.Serializable

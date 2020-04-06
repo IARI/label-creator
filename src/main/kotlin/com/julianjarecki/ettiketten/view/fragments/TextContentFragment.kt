@@ -2,8 +2,7 @@ package com.julianjarecki.ettiketten.view.fragments
 
 import com.julianjarecki.ettiketten.app.data.TextContent
 import com.julianjarecki.ettiketten.app.data.TextContentModel
-import com.julianjarecki.ettiketten.app.utils.colorpicker
-import com.julianjarecki.ettiketten.app.utils.makeDoublefield
+import com.julianjarecki.tfxserializer.utils.colorpicker
 import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
 import tornadofx.*

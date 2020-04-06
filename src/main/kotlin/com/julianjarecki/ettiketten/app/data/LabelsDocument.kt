@@ -1,9 +1,8 @@
 package com.julianjarecki.ettiketten.app.data
 
-import com.julianjarecki.ettiketten.app.fxproperties.FileProperty
-import com.julianjarecki.ettiketten.app.fxproperties.jfxJsonSerializer
-import com.julianjarecki.ettiketten.app.fxproperties.jfxJsonSerializerNonstrict
-import com.julianjarecki.ettiketten.app.utils.loadSettings
+import com.julianjarecki.tfxserializer.app.fxproperties.jfxJsonSerializer
+import com.julianjarecki.tfxserializer.fxproperties.FileProperty
+import com.julianjarecki.tfxserializer.utils.loadSettings
 import javafx.beans.property.SimpleObjectProperty
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
