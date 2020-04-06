@@ -120,7 +120,7 @@ fun Button.selectFile(prop: Property<String>, fileTypName: String = "",
 
     action {
         chooseFile("Select $fileTypName File".replace("  ", " "),
-                filters, mode) {
+                filters, null, mode) {
             var dir = prop.value.toFile
             while (!dir.isDirectory) {
                 dir = dir.parentFile ?: defaultDir
@@ -138,7 +138,7 @@ fun Button.selectFile(prop: Property<File>, fileTypName: String = "",
 
     action {
         chooseFile("Select $fileTypName File".replace("  ", " "),
-                filters, FileChooserMode.Single) {
+                filters, null, FileChooserMode.Single) {
             var dir = prop.value
             while (!dir.isDirectory) {
                 dir = dir.parentFile ?: defaultDir.invoke()

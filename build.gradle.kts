@@ -1,5 +1,3 @@
-import edu.sc.seis.launch4j.tasks.Launch4jExternalTask
-
 val kotlinVersion = "1.3.50"
 val mainClass = "com.julianjarecki.ettiketten.app.EttikettenApp"
 
@@ -25,7 +23,7 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     compile("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.10.0")
 
-    compile("no.tornado:tornadofx:1.7.19")
+    compile("no.tornado:tornadofx:1.7.20")
     //compile 'org.controlsfx:controlsfx:9.0.0'
     //compile("org.controlsfx:controlsfx:8.40.15")
 
@@ -92,8 +90,6 @@ tasks {
         }
     }
 
-
-
     launch4j {
         outfile = "Label Creator.exe"
         mainClassName = mainClass
@@ -103,8 +99,6 @@ tasks {
         copyConfigurable = shadowJar.outputs.files
         jar = "lib/${shadowJar.archiveFileName.get()}"
     }
-
-
 
     test {
         useJUnitPlatform()
