@@ -16,6 +16,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven("https://dl.bintray.com/iari/maven")
 }
 
 dependencies {
