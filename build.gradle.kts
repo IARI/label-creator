@@ -1,5 +1,6 @@
 val kotlinVersion = "1.3.71"
 val mainClass = "com.julianjarecki.ettiketten.app.EttikettenApp"
+version = "0.0.1"
 
 plugins {
     id("com.github.johnrengelman.shadow") version "5.1.0"
