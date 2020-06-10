@@ -4,7 +4,7 @@ val mainClass = "com.julianjarecki.ettiketten.app.EttikettenApp"
 plugins {
     id("com.github.johnrengelman.shadow") version "5.1.0"
     id("kotlinx-serialization") version "1.3.71"
-    id("org.jetbrains.kotlin.jvm") version "1.3.71"
+    kotlin("jvm") version "1.3.71"
 
     application
     id("edu.sc.seis.launch4j") version "2.4.6"
@@ -72,18 +72,12 @@ tasks {
 
     sourceSets {
         main {
-            //kotlin.srcDirs += 'src/main/kotlin'
-            //antlr.srcDirs += 'src/main/antlr'
             resources {
                 srcDir("resources")
             }
         }
         test {
-
         }
-        //    generated {
-        //        java.srcDir 'generated-src/antlr/main'
-        //    }
     }
 
     jar {
