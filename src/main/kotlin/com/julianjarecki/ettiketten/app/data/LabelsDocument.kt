@@ -1,6 +1,7 @@
 package com.julianjarecki.ettiketten.app.data
 
 import com.julianjarecki.tfxserializer.app.fxproperties.jfxJsonSerializer
+import com.julianjarecki.tfxserializer.app.fxproperties.jfxJsonSerializerNonstrict
 import com.julianjarecki.tfxserializer.fxproperties.FileProperty
 import com.julianjarecki.tfxserializer.utils.loadSettings
 import javafx.beans.property.SimpleObjectProperty
@@ -16,6 +17,7 @@ class LabelsDocument {
     val data = SimpleObjectProperty<LabelsDocumentData>()
 
     fun load() {
+        jfxJsonSerializerNonstrict.parse(LabelsDocumentData.serializer(), labelsFile.value.readText())
         labelsFile.value.loadSettings("Labels Document", LabelsDocumentData.serializer()) {
             this@LabelsDocument.data.value = this
         }

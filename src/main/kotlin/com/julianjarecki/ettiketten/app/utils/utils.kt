@@ -1,5 +1,6 @@
 package com.julianjarecki.ettiketten.app.utils
 
+import com.julianjarecki.tfxserializer.utils.BidirectionalConversionBinding
 import javafx.beans.Observable
 import javafx.beans.binding.Bindings
 import javafx.beans.binding.StringExpression
@@ -46,61 +47,71 @@ fun <T, R> Property<R>.bindTo(mainDep: ObservableValue<T>, vararg dependencies: 
     mainDep.objectBinding(*dependencies, op = op).let(::bind)
 }
 
-fun <T, R> ObservableValue<T>.objectBindingNonNull(vararg dependencies: Observable, op: (T) -> R?) = objectBinding(*dependencies) {
-    it?.let(op)
-}
+fun <T, R> ObservableValue<T>.objectBindingNonNull(vararg dependencies: Observable, op: (T) -> R?) =
+    objectBinding(*dependencies) {
+        it?.let(op)
+    }
 
-fun <T, R> ObservableValue<T>.objectBindingNonNull2(vararg dependencies: Observable, op: (T) -> R) = objectBinding(*dependencies) {
-    it!!.let(op)
-}
+fun <T, R> ObservableValue<T?>.objectBindingNonNull3(vararg dependencies: Observable, op: (T) -> R?) =
+    objectBinding(*dependencies) {
+        it?.let(op)
+    }
+
+fun <T, R> ObservableValue<T>.objectBindingNonNull2(vararg dependencies: Observable, op: (T) -> R) =
+    objectBinding(*dependencies) {
+        it!!.let(op)
+    }
 
 //fun <T> ObservableValue<Boolean>.cond(ifTrue: ObservableValue<T>, ifFalse: ObservableValue<T>) =
 sealed class ThenElse<T> {
     abstract operator fun invoke(`when`: When): ObservableValue<T>
 
     data class ThenElseObservable12<T>(
-            val then: ObservableObjectValue<T>,
-            val `else`: ObservableObjectValue<T>
+        val then: ObservableObjectValue<T>,
+        val `else`: ObservableObjectValue<T>
     ) : ThenElse<T>() {
         override fun invoke(`when`: When) = `when`.then(then).otherwise(`else`)
     }
 
     data class ThenElseObservable2<T>(
-            val then: T,
-            val `else`: ObservableObjectValue<T>
+        val then: T,
+        val `else`: ObservableObjectValue<T>
     ) : ThenElse<T>() {
         override fun invoke(`when`: When) = `when`.then(then).otherwise(`else`)
     }
 
     data class ThenElseStringObservable2(
-            val then: String,
-            val `else`: ObservableValue<String>
+        val then: String,
+        val `else`: ObservableValue<String>
     ) : ThenElse<String>() {
         override fun invoke(`when`: When) = `when`.then(then).otherwise(`else`.stringBinding { it })
     }
 
     data class ThenElseStringObservable3(
-            val then: String,
-            val `else`: String
+        val then: String,
+        val `else`: String
     ) : ThenElse<String>() {
         override fun invoke(`when`: When) = `when`.then(then).otherwise(`else`)
     }
 }
 
-infix fun <T> ObservableObjectValue<T>.`else`(other: ObservableObjectValue<T>) = ThenElse.ThenElseObservable12(this, other)
+infix fun <T> ObservableObjectValue<T>.`else`(other: ObservableObjectValue<T>) =
+    ThenElse.ThenElseObservable12(this, other)
+
 infix fun String.`else`(other: ObservableValue<String>) = ThenElse.ThenElseStringObservable2(this, other)
 infix fun String.`else`(other: String) = ThenElse.ThenElseStringObservable3(this, other)
 
 infix fun <T> ObservableBooleanValue.ifThen(thenElse: ThenElse<T>) = Bindings
-        .`when`(this)
-        .let(thenElse::invoke)
+    .`when`(this)
+    .let(thenElse::invoke)
 
 infix fun <A, B, C> ((A) -> B).compose(f: (B) -> C): (A) -> C = {
     f.invoke(invoke(it))
 }
 
 operator fun ObservableValue<String>.plus(other: String): StringExpression = Bindings.concat(this, other)
-operator fun ObservableValue<String>.plus(other: ObservableValue<String>): StringExpression = Bindings.concat(this, other)
+operator fun ObservableValue<String>.plus(other: ObservableValue<String>): StringExpression =
+    Bindings.concat(this, other)
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Any, R> KClass<T>.propByName(name: String) = memberProperties.find { p -> p.name == name } as KProperty1<T, R>

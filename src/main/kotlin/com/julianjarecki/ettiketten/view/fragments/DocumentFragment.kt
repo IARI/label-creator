@@ -18,7 +18,7 @@ class DocumentFragment : ListCellFragment<LabelsDocument>() {
         hbox {
             visibleWhen((document.data as ObjectProperty<LabelsDocumentData>).isNotNull)
 
-            label(document.data.select(LabelsDocumentData::columns))
+            label(document.data.select { it.columns.sizeProperty })
             label(" (x ")
             label(document.data.select(LabelsDocumentData::count))
             label(")")

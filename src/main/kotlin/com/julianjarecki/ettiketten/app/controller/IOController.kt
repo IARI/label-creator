@@ -10,6 +10,7 @@ import com.julianjarecki.tfxserializer.fxproperties.FileProperty
 import com.julianjarecki.tfxserializer.utils.*
 import javafx.scene.image.Image
 import tornadofx.*
+import java.io.File
 import java.nio.file.*
 
 class IOController : Controller() {
@@ -70,6 +71,8 @@ class IOController : Controller() {
                 labelsFile.value = newFile
                 data.value = LabelsDocumentData().apply {
                     units assign appPreferences.defaultUnits
+                    columns.add(GridLineData())
+                    rows.add(GridLineData())
                     syncCreateData()
                 }
                 save()
@@ -78,6 +81,22 @@ class IOController : Controller() {
             appPreferences.knownDocuments.value.add(ddata)
         }
     }
+
+    fun copy(doc: LabelsDocument) {
+        val oldFile = doc.labelsFile.value
+        inputDialog(oldFile.nameWithoutExtension, "Copy ${oldFile.name}") { newDocName ->
+            val newFile = appPreferences.documentFolder.value.resolve("$newDocName.$labelsExtension")
+            oldFile.copyTo(newFile)
+
+            open(newFile)
+        }
+    }
+
+    fun open(file: File) = LabelsDocument().apply {
+        labelsFile.value = file
+        open(this)
+    }
+
 
     fun open(doc: LabelsDocument) = doc.run {
         val known = appPreferences.knownDocuments.value
@@ -88,5 +107,10 @@ class IOController : Controller() {
             this inmodel LabelsDocumentModel::class,
             data.value inmodel LabelsDocumentDataModel::class
         )
+    }
+
+    fun delete(doc: LabelsDocument) = doc.run {
+        appPreferences.knownDocuments.value.remove(this)
+        labelsFile.value.delete()
     }
 }

@@ -8,14 +8,12 @@ import com.itextpdf.layout.borders.Border
 import com.itextpdf.layout.element.BlockElement
 import com.itextpdf.layout.property.TextAlignment
 import com.itextpdf.layout.property.VerticalAlignment
-import com.julianjarecki.ettiketten.app.data.AppSettingsModel
-import com.julianjarecki.ettiketten.app.data.LabelsDocumentDataModel
-import com.julianjarecki.ettiketten.app.data.LabelsDocumentModel
-import com.julianjarecki.ettiketten.app.data.TextContent
+import com.julianjarecki.ettiketten.app.data.*
 import com.julianjarecki.ettiketten.app.utils.itext.*
 import com.julianjarecki.tfxserializer.utils.replaceExtension
 import tornadofx.Controller
 import java.io.File
+import kotlin.math.ceil
 import kotlin.math.min
 import com.julianjarecki.ettiketten.app.data.PageSize as MyPageSize
 
@@ -51,18 +49,10 @@ class PdfExportController : Controller() {
                 document(PageSize.A4) {
                     font = Fonts.HELVETICA_BOLD
 
-                    paragraph("Hello World")
-                    paragraph("${data.rows.value} x ${data.columns.value}") {
-                    }
-
                     list {
                         symbolIndent = 12.0f
                         setListSymbol("\u2022")
                         font = Fonts.COURIER
-
-                        item("Hello World")
-                        item("Hello World 2")
-                        item("Hello World 3")
                         item("Hello World 4")
                     }
 
@@ -94,35 +84,67 @@ class PdfExportController : Controller() {
         val columns: Int,
         val offsetH: Float,
         val offsetV: Float,
-        val lwidth: Float,
-        val lheight: Float
-    )
+        val colWidth: Array<Float>,
+        val rowHeight: Array<Float>
+    ) {
+        val colOffset = colWidth.scan(0f) { acc, fl -> acc + fl }
+        val rowOffset = rowHeight.scan(0f) { acc, fl -> acc + fl }
+    }
 
     private val LabelsDocumentDataModel.eData: EffectiveLabelsData
         get() {
             val ps = item.pageSize.pageSize
             var offseth = offsetH.value.toFloat()
             var offsetv = offsetV.value.toFloat()
-            var lheight = labelHeight.value.toFloat()
-            var lwidth = labelWidth.value.toFloat()
-            var cols = columns.value
+            val lheight = labelHeight.value.toFloat()
+            val lwidth = labelWidth.value.toFloat()
+            val widthes: Array<Float>
+            val heights: Array<Float>
+            var cols = columns.value.size
+            //var rws = rows.value.size
+            val rowsByCount = ceil(count.value.toDouble() / cols).toInt()
 
             if (controlLabelH.value) {
                 if (cols * lwidth > ps.width) cols = (ps.width / lwidth).toInt()
                 if (centerH.value) offseth = (ps.width - lwidth * cols) / 2
+                widthes = Array(cols) { lwidth }
             } else {
-                lwidth = (ps.width - 2 * offseth) / columns.value
+                val availableWidth = ps.width - 2 * offseth
+                widthes = computeGridLineSizes(columns.value, availableWidth)
             }
             if (controlLabelV.value) {
                 val maxRows = (ps.height / lheight).toInt()
-                val rows = min(Math.ceil(count.value.toDouble() / cols).toInt(), maxRows)
-                if (centerV.value) offsetv = (ps.height - lheight * rows) / 2
+                val rws = min(rowsByCount, maxRows)
+                if (centerV.value) offsetv = (ps.height - lheight * rws) / 2
+                heights = Array(rowsByCount) { lheight }
             } else {
-                lheight = (ps.height - 2 * offsetv) / rows.value
+                val availableHeight = ps.height - 2 * offsetv
+                heights = computeGridLineSizes(rows.value, availableHeight)
             }
 
-            return EffectiveLabelsData(ps, cols, offseth, offsetv, lwidth, lheight)
+            return EffectiveLabelsData(ps, cols, offseth, offsetv, widthes, heights)
         }
+
+    private fun computeGridLineSizes(lines: List<GridLineData>, availableSpace: Float): Array<Float> {
+        var fixedSpace = 0f
+        var totalFractional = 0.0
+        lines.forEach {
+            if (it.enableUnit.value) {
+                fixedSpace += it.size.value.toFloat()
+            } else {
+                totalFractional += it.size.value
+            }
+        }
+        val availableRelativeSpace = availableSpace - fixedSpace
+        return Array(lines.size) {
+            lines[it].run {
+                if (enableUnit.value)
+                    size.value.toFloat()
+                else
+                    availableRelativeSpace * (size.value / totalFractional).toFloat()
+            }
+        }
+    }
 
     private fun PdfCanvas.export(pdfDoc: PdfDocument, data: LabelsDocumentDataModel, eData: EffectiveLabelsData) {
         lineJoinStyle = LineJoinStyles.ROUND
@@ -134,10 +156,14 @@ class PdfExportController : Controller() {
 
         data.data.value.forEachIndexed { index, labelContent ->
             val linkedLabel = data.dataByUUID.get(labelContent.linkedTo.value) ?: labelContent
-            val xOffset = eData.lwidth * index.rem(eData.columns) + eData.offsetH
-            val yOffset = eData.lheight * index.div(eData.columns) + eData.offsetV
+            val col = index.rem(eData.columns)
+            val row = index.div(eData.columns)
+            val xOffset = eData.colOffset[col] + eData.offsetH
+            val yOffset = eData.rowOffset[row] + eData.offsetV
+            val lWidth = eData.colWidth[col]
+            val lHeight = eData.rowHeight[row]
 
-            rectCanvas(pdfDoc, xOffset, -(yOffset + eData.lheight), eData.lwidth, eData.lheight, {
+            rectCanvas(pdfDoc, xOffset, -(yOffset + lHeight), lWidth, lHeight, {
                 if (data.drawBorder.value) {
                     setLineWidth(border.width)
                     setStrokeColor(data.borderColor.value.iText)
@@ -168,15 +194,15 @@ class PdfExportController : Controller() {
             }) {
                 div {
                     setVerticalAlignment(VerticalAlignment.MIDDLE)
-                    height = eData.lheight.point
+                    height = lHeight.point
                     val f = data.font.value.PdfFont
                     font = f
 
                     val lHeightTitlePart = if (linkedLabel.enableSubTitle.value) .6f else 1f
-                    renderTextContent(f, linkedLabel.title, eData.lwidth, eData.lheight * lHeightTitlePart)
+                    renderTextContent(f, linkedLabel.title, lWidth, lHeight * lHeightTitlePart)
 
                     if (linkedLabel.enableSubTitle.value) {
-                        renderTextContent(f, linkedLabel.subTitle, eData.lwidth, eData.lheight * (1 - lHeightTitlePart))
+                        renderTextContent(f, linkedLabel.subTitle, lWidth, lHeight * (1 - lHeightTitlePart))
                     }
                 }
             }

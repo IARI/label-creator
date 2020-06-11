@@ -13,17 +13,13 @@ plugins {
     id("com.github.breadmoirai.github-release") version "2.2.9"
 }
 
-//group 'com.julianjarecki.ettiketten'
-//version '1.0-SNAPSHOT'
-//sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
     maven("https://dl.bintray.com/iari/maven")
 }
 
 dependencies {
-    testCompile("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
 
@@ -32,7 +28,7 @@ dependencies {
     //implementation("org.controlsfx:controlsfx:8.40.15")
 
     // use tfx serializer to serialize javafx prooperties
-    implementation("com.julianjarecki:TFXserializer:1.0.1")
+    implementation("com.julianjarecki:TFXserializer:1.1.0")
 
     //compile 'de.jensd:fontawesomefx:8.15.0'
     implementation("de.jensd:fontawesomefx-commons:8.15")
@@ -66,6 +62,7 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
         kotlinOptions.freeCompilerArgs = listOf(
             "-Xuse-experimental=kotlin.Experimental",
+            "-Xopt-in=kotlin.ExperimentalStdlibApi",
             "-Xuse-experimental=kotlinx.serialization.ImplicitReflectionSerializer"
         )
     }

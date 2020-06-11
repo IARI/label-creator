@@ -10,6 +10,9 @@ import com.julianjarecki.ettiketten.app.utils.openUi
 import com.julianjarecki.ettiketten.app.utils.view
 import com.julianjarecki.ettiketten.view.base.AppTab
 import com.julianjarecki.ettiketten.view.fragments.DocumentFragment
+import com.julianjarecki.tfxserializer.utils.OS
+import com.julianjarecki.tfxserializer.utils.openInExplorer
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import javafx.scene.layout.Priority
 import tornadofx.*
@@ -33,6 +36,23 @@ class KnownDocuments : AppTab("Documents", MaterialDesignIcon.FILE_DOCUMENT.view
             cellFragment(DocumentFragment::class)
 
             onUserSelect(action = io::open)
+
+            contextmenu {
+                item("open", graphic = FontAwesomeIcon.FOLDER_OPEN.view).action {
+                    selectedItem?.let(io::open)
+                }
+                item("clone", graphic = FontAwesomeIcon.COPY.view).action {
+                    selectedItem?.let(io::copy)
+                }
+                item("show in Browser", graphic = FontAwesomeIcon.FOLDER.view).action {
+                    selectedItem?.labelsFile?.value?.openInExplorer()
+                }
+                item("delete", graphic = FontAwesomeIcon.TRASH.view).action {
+                    selectedItem?.let(io::delete)
+                }
+            }
+
+            //copy
         }
     }
 

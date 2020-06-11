@@ -8,7 +8,6 @@ import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
 import javafx.scene.paint.Color
-import tornadofx.onChange
 
 val Color.iText get() = DeviceRgb(red.toFloat(), green.toFloat(), blue.toFloat())
 
@@ -21,9 +20,9 @@ var BlockElement<*>.fontColor: Color
 
 class PointConversionBinding(pointProp: Property<Number>, prop: Property<Number>, val unit: ObservableValue<Units>) :
     BidirectionalConversionBinding<Number, Number>(pointProp, prop) {
-    override fun convertStoT(s: Number): Number = s.toDouble() / (unit.value?.points ?: 1.0)
-    override fun convertTtoS(t: Number): Number = t.toDouble() * (unit.value?.points ?: 1.0)
-    val unitChange = ChangeListener<Units> { p, old, new ->
+    override fun convertStoT(oldT: Number, oldS: Number, s: Number): Number = s.toDouble() / (unit.value?.points ?: 1.0)
+    override fun convertTtoS(oldS: Number, oldT: Number, t: Number): Number = t.toDouble() * (unit.value?.points ?: 1.0)
+    val unitChange = ChangeListener<Units> { _, _, _ ->
         triggerUpdate()
     }
 

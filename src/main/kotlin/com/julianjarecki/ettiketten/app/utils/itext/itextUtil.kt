@@ -26,12 +26,16 @@ import kotlin.math.min
 const val userUnitPerInch = 72
 const val mmPerInch = 25.4
 
-enum class Units(val points: Double, short: String) {
+enum class Units(val points: Double, val short: String) {
     Point(1.0, "pt"),
     Inch(userUnitPerInch.toDouble(), "in"),
     Millimeter(userUnitPerInch / mmPerInch, "mm"),
     Centimeter(10 * userUnitPerInch / mmPerInch, "cm")
     ;
+
+    companion object {
+        fun byShort(short: String) = values().first { it.short == short }
+    }
 }
 
 //import com.julianjarecki.ettiketten.app.data.PageSize as myPageSize
@@ -177,6 +181,7 @@ fun PdfFont.getHeight(text: String, fontSize: Float = 12f) = getAscent(text, fon
 enum class BorderStyle(val c: (color: DeviceRgb, width: Float, opacity: Float) -> Border) {
     Solid(::SolidBorder),
     DoubleB(::DoubleBorder),
+
     //Outset(::OutsetBorder),
     //Inset(::InsetBorder),
     //Groove(::GrooveBorder),

@@ -27,6 +27,7 @@ class LabelContentFragment : DataGridCellFragment<LabelContent>() {
     }
 
     override val root = stackpane {
+        addClass(Styles.labelrepresentation)
         hbox {
             alignment = Pos.BOTTOM_CENTER
             visibleWhen(labelContent.linkedTo.isNotEmpty)

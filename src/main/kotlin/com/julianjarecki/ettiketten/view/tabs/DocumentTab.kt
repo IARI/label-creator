@@ -10,18 +10,22 @@ import com.julianjarecki.ettiketten.app.utils.plus
 import com.julianjarecki.ettiketten.app.utils.itext.BorderStyle
 import com.julianjarecki.ettiketten.app.utils.itext.Fonts
 import com.julianjarecki.ettiketten.app.utils.itext.Units
+import com.julianjarecki.ettiketten.styles.Styles
 import com.julianjarecki.ettiketten.view.base.AppTab
+import com.julianjarecki.ettiketten.view.fragments.GridLineFragment
 import com.julianjarecki.ettiketten.view.fragments.LabelContentFragment
 import com.julianjarecki.tfxserializer.utils.openWithDefaultApp
 import com.julianjarecki.tfxserializer.utils.starIfDirty
 import com.julianjarecki.tfxserializer.utils.swapValueWith
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
+import javafx.geometry.Orientation
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Priority
+import javafx.scene.paint.Color
 import tornadofx.*
 
 class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
@@ -110,7 +114,7 @@ class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
                                     }
                                     spinner(
                                         1, 100, 0, 1, true,
-                                        enableScroll = true, property = data.columns
+                                        enableScroll = true, property = data.columnCount
                                     ) {
                                         prefWidth = 100.0
                                         disableWhen(data.controlLabelH)
@@ -150,7 +154,7 @@ class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
                                     }
                                     spinner(
                                         1, 100, 0, 1, true,
-                                        enableScroll = true, property = data.rows
+                                        enableScroll = true, property = data.rowCount
                                     ) {
                                         prefWidth = 100.0
                                         disableWhen(data.controlLabelV)
@@ -196,31 +200,67 @@ class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
                 }
             }
         }
-        datagrid<LabelContent>(scope = this@DocumentTab.scope) {
+        borderpane {
             hgrow = Priority.ALWAYS
-            maxCellsInRowProperty.bind(data.columns)
-            cellWidth = 180.0
-            cellHeight = 130.0
-            //cellHeightProperty.bind()
+            top {
+                listview(data.columns) {
+                    addClass(Styles.gridLineList)
+                    paddingLeftProperty.bind(
+                        data.controlLabelV.doubleBinding {
+                            if (it ?: false) .0 else Styles.labelsLeftBarWidth
+                        }
+                    )
+                    paddingLeft = Styles.labelsLeftBarWidth
+                    orientation = Orientation.HORIZONTAL
+                    prefHeight = Styles.labelsTopRowHeight
+                    cellFragment(GridLineFragment::class)
+                }
+            }
+            left {
+                listview(data.rows) {
+                    addClass(Styles.gridLineList)
+                    prefWidth = Styles.labelsLeftBarWidth
+                    orientation = Orientation.VERTICAL
+                    cellFragment(GridLineFragment::class)
+                }
+            }
+            center {
+                datagrid<LabelContent>(scope = this@DocumentTab.scope) {
+                    hgrow = Priority.ALWAYS
+                    maxCellsInRowProperty.bind(data.columns.select { it.sizeProperty })
+                    cellWidth = Styles.labelCellWidth
+                    cellHeight = Styles.labelCellHeight
+                    horizontalCellSpacing = .0
+                    verticalCellSpacing = .0
+                    //cellHeightProperty.bind()
 
-            selectionModel.selectionMode = SelectionMode.MULTIPLE
-            selectedLabels.bind(selectionModel.selectedItems, { it })
+                    selectionModel.selectionMode = SelectionMode.MULTIPLE
+                    selectedLabels.bind(selectionModel.selectedItems, { it })
 
-            data.columns.onChange {
-                DataGridSkin::class.java.getDeclaredMethod("updateItems").apply {
-                    isAccessible = true
-                    invoke(this@datagrid.skin)
+                    data.columns.onChange {
+                        DataGridSkin::class.java.getDeclaredMethod("updateItems").apply {
+                            isAccessible = true
+                            invoke(this@datagrid.skin)
+                        }
+                    }
+
+                    contextmenu {
+                        item("link", graphic = FontAwesomeIcon.LINK.view).action(::linkData)
+                        item("unlink", graphic = FontAwesomeIcon.UNLINK.view).action(::unlinkData)
+                    }
+
+                    itemsProperty.bind(data.data)
+
+                    cellFragment<LabelContentFragment>()
                 }
             }
 
-            contextmenu {
-                item("link", graphic = FontAwesomeIcon.LINK.view).action(::linkData)
-                item("unlink", graphic = FontAwesomeIcon.UNLINK.view).action(::unlinkData)
+            addClass(Styles.gridBackground)
+            top.removeWhen(data.controlLabelH)
+            left.apply {
+                removeWhen(data.controlLabelV)
+                prefWidth = Styles.labelsLeftBarWidth
             }
-
-            itemsProperty.bind(data.data)
-
-            cellFragment<LabelContentFragment>()
         }
     }
 

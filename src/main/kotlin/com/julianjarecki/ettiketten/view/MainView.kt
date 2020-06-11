@@ -42,10 +42,7 @@ class MainView : View(AppName) {
                         chooseFile("Open a Document", arrayOf(labelsFilter)) {
                             initialDirectory = appPreferences.documentFolder.value
                         }.firstOrNull()?.let {
-                            LabelsDocument().apply {
-                                labelsFile.value = it
-                                io.open(this)
-                            }
+                            io.open(it)
                         }
                     }
                 }

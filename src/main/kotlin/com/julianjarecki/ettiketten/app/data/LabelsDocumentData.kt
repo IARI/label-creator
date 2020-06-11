@@ -7,9 +7,11 @@ import com.julianjarecki.ettiketten.app.utils.itext.convertUnits
 import com.julianjarecki.tfxserializer.app.fxproperties.ObjectPropertySerializer
 import com.julianjarecki.tfxserializer.app.fxproperties.ObservableListSerializer
 import com.julianjarecki.tfxserializer.fxproperties.ColorProperty
+import com.julianjarecki.tfxserializer.utils.bindCount
 import javafx.beans.property.*
 import javafx.scene.paint.Color
 import kotlinx.serialization.ContextualSerialization
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import tornadofx.ItemViewModel
 import tornadofx.observableListOf
@@ -21,41 +23,61 @@ class LabelsDocumentData {
     @ContextualSerialization
     val title = SimpleStringProperty("Labels")
     val pageSize = PageSize()
+
     @Serializable(with = ObjectPropertySerializer::class)
     val units = SimpleObjectProperty<Units>(Units.Millimeter)
-    @ContextualSerialization
-    val columns = SimpleIntegerProperty(2)
-    @ContextualSerialization
-    val rows = SimpleIntegerProperty(2)
+
+    @Serializable(with = ObservableListSerializer::class)
+    @SerialName("columnDefinitions")
+    val columns = observableListOf<GridLineData>()
+
+    @Serializable(with = ObservableListSerializer::class)
+    @SerialName("rowDefinitions")
+    val rows = observableListOf<GridLineData>()
+
     @ContextualSerialization
     val count = SimpleIntegerProperty(2)
+
     @ContextualSerialization
     val centerH = SimpleBooleanProperty(true)
+
     @ContextualSerialization
     val centerV = SimpleBooleanProperty(true)
+
     @ContextualSerialization
     val offsetH = SimpleDoubleProperty(.0)
+
     @ContextualSerialization
     val offsetV = SimpleDoubleProperty(.0)
+
     @ContextualSerialization
     val controlLabelH = SimpleBooleanProperty(false)
+
     @ContextualSerialization
     val controlLabelV = SimpleBooleanProperty(false)
+
     @ContextualSerialization
     val labelWidth = SimpleDoubleProperty(.0)
+
     @ContextualSerialization
     val labelHeight = SimpleDoubleProperty(.0)
+
     @Serializable(with = ObservableListSerializer::class)
     val data = observableListOf<LabelContent>()
+
     @Serializable(with = ObjectPropertySerializer::class)
     val font = SimpleObjectProperty<Fonts>(Fonts.HELVETICA)
+
     @ContextualSerialization
     val drawBorder = SimpleBooleanProperty()
+
     @ContextualSerialization
     val borderInside = SimpleBooleanProperty()
+
     @ContextualSerialization
     val borderWidth = SimpleDoubleProperty(1.0)
     val borderColor = ColorProperty()
+
     @Serializable(with = ObjectPropertySerializer::class)
     val borderStyle = SimpleObjectProperty<BorderStyle>(BorderStyle.Solid)
 
@@ -76,8 +98,15 @@ class LabelsDocumentDataModel : ItemViewModel<LabelsDocumentData>() {
         bind<SimpleFloatProperty, Number, SimpleFloatProperty> { item?.pageSize?.width }.convertUnits(units)
     val pageHeight =
         bind<SimpleFloatProperty, Number, SimpleFloatProperty> { item?.pageSize?.height }.convertUnits(units)
-    val columns = bind<Number, SimpleIntegerProperty, SimpleIntegerProperty>(LabelsDocumentData::columns)
-    val rows = bind<Number, SimpleIntegerProperty, SimpleIntegerProperty>(LabelsDocumentData::rows)
+
+    val columns = bind(LabelsDocumentData::columns)
+    val rows = bind(LabelsDocumentData::rows)
+    val columnCount = SimpleIntegerProperty().apply {
+        bindCount(columns) { GridLineData() }
+    }
+    val rowCount = SimpleIntegerProperty().apply {
+        bindCount(rows) { GridLineData() }
+    }
     val count = bind<Number, SimpleIntegerProperty, SimpleIntegerProperty>(LabelsDocumentData::count)
     val centerH = bind<Boolean, BooleanProperty, SimpleBooleanProperty>(LabelsDocumentData::centerH)
     val centerV = bind<Boolean, BooleanProperty, SimpleBooleanProperty>(LabelsDocumentData::centerV)
