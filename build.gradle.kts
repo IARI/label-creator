@@ -47,11 +47,11 @@ dependencies {
     //implementation("com.github.afester.javafx:FranzXaver:0.1")
 
     //implementation("com.itextpdf:itextpdf:5.5.13.1")
-    implementation("com.itextpdf:kernel:7.1.8")
-    //implementation("com.itextpdf:io:7.1.8")
-    implementation("com.itextpdf:layout:7.1.8")
-    //implementation("com.itextpdf:forms:7.1.8")
-    //implementation("com.itextpdf:pdfs:7.1.8")
+    implementation("com.itextpdf:kernel:7.1.11")
+    //implementation("com.itextpdf:io:7.1.11")
+    implementation("com.itextpdf:layout:7.1.11")
+    //implementation("com.itextpdf:forms:7.1.11")
+    //implementation("com.itextpdf:pdfs:7.1.11")
 
     // https://mvnrepository.com/artifact/net.java.dev.jna/jna
     //implementation("net.java.dev.jna:jna:5.4.0")
