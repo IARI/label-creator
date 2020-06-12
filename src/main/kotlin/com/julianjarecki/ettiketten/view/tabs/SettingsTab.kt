@@ -23,6 +23,22 @@ class SettingsTab : AppTab("Settings", MaterialDesignIcon.SETTINGS.view) {
                     combobox(appPreferences.defaultUnits, Units.values().toList()) { }
                 }
             }
+            fieldset("Rendering") {
+                field("auto-height factor") {
+                    tooltip("Fraction of Labelheight that determines auto-fontheight")
+                    spinner(
+                        .01, 1.2, amountToStepBy = .01, editable = true,
+                        enableScroll = true, property = appPreferences.labelFontheightFraction
+                    )
+                }
+                field("line height") {
+                    tooltip("multiple of the line-height that determines the distance between two lines")
+                    spinner(
+                        .05, 5.0, amountToStepBy = .05, editable = true,
+                        enableScroll = true, property = appPreferences.multipliedLeading
+                    )
+                }
+            }
             fieldset("Export") {
                 field("Open Document after Export") {
                     checkbox("", appPreferences.openDocumentAfterExport)

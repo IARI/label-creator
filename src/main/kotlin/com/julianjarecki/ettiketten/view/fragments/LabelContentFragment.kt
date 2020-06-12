@@ -44,11 +44,16 @@ class LabelContentFragment : DataGridCellFragment<LabelContent>() {
             //visibleWhen(labelContent.linkedTo.isEmpty)
             textContentFragment(linked.title)
 
-            checkbox("Subtitle", linked.enableSubTitle)
-
-            textContentFragment(linked.subTitle) {
-                //root.enableWhen(content.enableSubTitle)
-                root.hiddenWhen(!linked.enableSubTitle)
+            hbox {
+                //checkbox("Subtitle", linked.enableSubTitle)
+                togglebutton("s\nu\nb") {
+                    addClass(Styles.miniButton)
+                    selectedProperty().bindBidirectional(linked.enableSubTitle)
+                }
+                textContentFragment(linked.subTitle) {
+                    //root.enableWhen(content.enableSubTitle)
+                    root.hiddenWhen(!linked.enableSubTitle)
+                }
             }
         }
     }

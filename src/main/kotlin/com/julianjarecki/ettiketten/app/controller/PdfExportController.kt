@@ -159,9 +159,10 @@ class PdfExportController : Controller() {
             val col = index.rem(eData.columns)
             val row = index.div(eData.columns)
             val xOffset = eData.colOffset[col] + eData.offsetH
-            val yOffset = eData.rowOffset[row] + eData.offsetV
+            val yOffset = eData.rowOffset.getOrElse(row) { eData.rowOffset.last() } + eData.offsetV
             val lWidth = eData.colWidth[col]
-            val lHeight = eData.rowHeight[row]
+            val lHeight = eData.rowHeight.getOrElse(row) { eData.rowHeight.last() }
+            val enableSubtitle = linkedLabel.enableSubTitle.value
 
             rectCanvas(pdfDoc, xOffset, -(yOffset + lHeight), lWidth, lHeight, {
                 if (data.drawBorder.value) {
@@ -198,10 +199,10 @@ class PdfExportController : Controller() {
                     val f = data.font.value.PdfFont
                     font = f
 
-                    val lHeightTitlePart = if (linkedLabel.enableSubTitle.value) .6f else 1f
+                    val lHeightTitlePart = if (enableSubtitle) .6f else 1f
                     renderTextContent(f, linkedLabel.title, lWidth, lHeight * lHeightTitlePart)
 
-                    if (linkedLabel.enableSubTitle.value) {
+                    if (enableSubtitle) {
                         renderTextContent(f, linkedLabel.subTitle, lWidth, lHeight * (1 - lHeightTitlePart))
                     }
                 }
@@ -214,22 +215,34 @@ class PdfExportController : Controller() {
         textContent: TextContent,
         lwidth: Float,
         lheight: Float
-    ) = paragraph(textContent.text.value) {
-        setTextAlignment(TextAlignment.CENTER)
-        setVerticalAlignment(VerticalAlignment.MIDDLE)
-        //setSpacingRatio()
-        setMultipliedLeading(1.05f)
-        //setBackgroundColor(DeviceRgb.GREEN)
-        //setBorder(DottedBorder(1f))
-        fontColor = textContent.color.value
-
-        if (textContent.autoSize.value) {
+    ) {
+        val fontSize = if (textContent.autoSize.value) {
             font
                 //.getBiggestFontSize(textContent.text.value, lwidth * .85f, lheight * 0.8f)
-                .getBiggestFontSize(textContent.text.value, lwidth * .85f, lheight)
-                .let(::setFontSize)
-        } else {
-            setFontSize(textContent.size.value.toFloat())
+                .getBiggestFontSize(
+                    textContent.text.value,
+                    lwidth * .85f,
+                    appSettings.labelFontheightFraction.floatValue() * lheight
+                )
+        } else textContent.size.value.toFloat()
+
+        renderTextContent(fontSize, textContent, textContent.text.value)
+    }
+
+    fun BlockElement<*>.renderTextContent(
+        fontSize: Float,
+        textContent: TextContent,
+        text: String
+    ) {
+        paragraph(text) {
+            setTextAlignment(TextAlignment.CENTER)
+            setVerticalAlignment(VerticalAlignment.MIDDLE)
+            //setSpacingRatio()
+            setMultipliedLeading(appSettings.multipliedLeading.floatValue())
+            //setBackgroundColor(DeviceRgb.GREEN)
+            //setBorder(DottedBorder(1f))
+            fontColor = textContent.color.value
+            setFontSize(fontSize)
         }
     }
 

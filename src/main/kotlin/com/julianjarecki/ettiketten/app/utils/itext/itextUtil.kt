@@ -167,11 +167,15 @@ enum class Fonts(val fontName: String) {
 
 
 fun PdfFont.getBiggestFontSize(text: String, availableWidth: Float, availableHeight: Float): Float {
-    val fontSizeWidth = (availableWidth / (getContentWidth(PdfString(text)) * getFontMatrix()[0]))
+    val lines = text.split("\n")
+    val longestLine = lines.maxBy { it.length }!!
+    val fontSizeWidth = (availableWidth / (getContentWidth(longestLine) * getFontMatrix()[0]))
     //val fontSizeHeight = (100f * availableHeight / getHeight(text, 100f))
-    val fontSizeHeight = availableHeight
+    val fontSizeHeight = availableHeight / lines.size
     return min(fontSizeWidth.toFloat(), fontSizeHeight)
 }
+
+fun PdfFont.getContentWidth(text: String) = getContentWidth(PdfString(text))
 
 
 fun PdfFont.getHeight(text: String, fontSize: Float = 12f) = getAscent(text, fontSize) - getDescent(text, fontSize)

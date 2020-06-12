@@ -21,6 +21,7 @@ class Styles : Stylesheet() {
         val noarrow by cssclass()
         val gridLine by cssclass()
         val gridLineList  by cssclass()
+        val miniButton by cssclass()
     }
 
     init {
@@ -42,6 +43,14 @@ class Styles : Stylesheet() {
             effect = DropShadow(5.0, Color.GRAY)
         }
 
+        miniButton {
+            padding = box(0.px, 2.px)
+            backgroundInsets += box(0.px)
+            and(selected) {
+                backgroundColor += Color.LIGHTGREEN
+            }
+        }
+
         somepadding {
             padding = box(6.px)
         }
@@ -54,6 +63,15 @@ class Styles : Stylesheet() {
             borderWidth += box(1.px)
             borderStyle += BorderStrokeStyle.SOLID
             borderColor += box(Color.LIGHTGRAY)
+            contains(spinner) {
+                padding = box(0.px)
+                contains(s(incrementArrowButton, decrementArrowButton, textInput)) {
+                    padding = box(0.px, 2.px)
+                }
+                contains(textInput) {
+                    backgroundColor += Color.ALICEBLUE
+                }
+            }
         }
 
         gridLine {

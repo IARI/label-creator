@@ -33,15 +33,24 @@ class AppSettings {
 
     @ContextualSerialization
     val windowWidth = SimpleDoubleProperty(800.0)
+
     @ContextualSerialization
     val windowHeight = SimpleDoubleProperty(600.0)
+
     @ContextualSerialization
     val windowX = SimpleDoubleProperty(100.0)
+
     @ContextualSerialization
     val windowY = SimpleDoubleProperty(100.0)
+
     @ContextualSerialization
     val windowMaximized = SimpleBooleanProperty(false)
 
+    @ContextualSerialization
+    val labelFontheightFraction = SimpleDoubleProperty(0.73)
+
+    @ContextualSerialization
+    val multipliedLeading = SimpleDoubleProperty(1.0)
 }
 
 class AppSettingsModel : ItemViewModel<AppSettings>() {
@@ -56,4 +65,8 @@ class AppSettingsModel : ItemViewModel<AppSettings>() {
     val windowY = bind<Number, SimpleDoubleProperty, SimpleDoubleProperty>(AppSettings::windowY, true)
     val windowMaximized =
         bind<Boolean, SimpleBooleanProperty, SimpleBooleanProperty>(AppSettings::windowMaximized, true)
+    val labelFontheightFraction =
+        bind<Number, SimpleDoubleProperty, SimpleDoubleProperty>(AppSettings::labelFontheightFraction, true)
+    val multipliedLeading =
+        bind<Number, SimpleDoubleProperty, SimpleDoubleProperty>(AppSettings::multipliedLeading, true)
 }
