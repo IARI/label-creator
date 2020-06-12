@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.utils.identity
 
 val kotlinVersion = "1.3.72"
 val appMainClassName = "com.julianjarecki.ettiketten.app.EttikettenApp"
-version = "0.0.1"
+version = "0.0.2"
 
 plugins {
     id("com.github.johnrengelman.shadow") version "5.1.0"
