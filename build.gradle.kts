@@ -1,3 +1,6 @@
+import com.github.breadmoirai.githubreleaseplugin.ChangeLogSupplier
+import org.jetbrains.kotlin.utils.identity
+
 val kotlinVersion = "1.3.72"
 val appMainClassName = "com.julianjarecki.ettiketten.app.EttikettenApp"
 version = "0.0.1"
@@ -10,7 +13,7 @@ plugins {
     application
     id("edu.sc.seis.launch4j") version "2.4.6"
 
-    id("com.github.breadmoirai.github-release") version "2.2.9"
+    id("com.github.breadmoirai.github-release") version "2.2.12"
 }
 
 repositories {
@@ -102,11 +105,58 @@ tasks {
         useJUnitPlatform()
     }
 
+    val binaryfile = project.launch4j.run { outputDirectory.resolve(outfile) }
+
     githubRelease {
+        token {
+            // in intellij run configuration add:
+            // Arguments: -Pgithub.token="<insert-the-token-here>"
+            property("github.token") as String
+        }
         repo("label-creator")
         owner("IARI")
-        //targetCommitish("master")
+        targetCommitish("master")
         overwrite(true)
-        draft(true)
+        tagName("v${project.version}")
+        draft(findProperty("github.draft")?.toString()?.toBoolean() ?: true)
+        dryRun(findProperty("github.dryrun")?.toString()?.toBoolean() ?: false)
+        releaseAssets(
+            binaryfile
+        )
+
+        changelog(closureOf<ChangeLogSupplier> {
+            addOption("--pretty=medium")
+        })
+
+        body {
+            val cl = changelog().call().split("""commit [0-9a-f]{7}\s*Author:\V*\s*Date:\V*\s*""".toRegex())
+            val clstring = cl.flatMap {
+                it.trim()
+                    .lines()
+                    .map {
+                        //val match = """(\s+\-)\s*(\S.*)""".toRegex().matchEntire(it)
+                        if (it.startsWith(" ")) {
+                            it.replace("""(\s+[\-\+*])(\S)""".toRegex()) {
+                                it.groups[1]!!.value + " " + it.groups[2]!!.value
+                            }
+                        } else if (it.any { !it.isWhitespace() }) "- $it"
+                        else it
+                    }
+            }.joinToString("\n")
+            """
+                # Release $version
+
+                Todo: add a release description
+                
+                ## Change log
+                
+            """.trimIndent() +
+                    clstring +
+                    """
+                
+                
+                _release created with the breadmoirai.github-release gradle plugin_
+            """.trimIndent()
+        }
     }
 }
