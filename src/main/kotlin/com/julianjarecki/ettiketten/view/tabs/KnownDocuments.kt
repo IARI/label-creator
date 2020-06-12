@@ -50,6 +50,9 @@ class KnownDocuments : AppTab("Documents", MaterialDesignIcon.FILE_DOCUMENT.view
                 item("delete", graphic = FontAwesomeIcon.TRASH.view).action {
                     selectedItem?.let(io::delete)
                 }
+                item("rename", graphic = FontAwesomeIcon.TRASH.view).action {
+                    selectedItem?.let(io::rename)
+                }
             }
 
             //copy

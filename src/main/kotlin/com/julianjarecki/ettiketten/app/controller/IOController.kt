@@ -92,6 +92,17 @@ class IOController : Controller() {
         }
     }
 
+    fun rename(doc: LabelsDocument) {
+        val oldFile = doc.labelsFile.value
+        inputDialog(oldFile.nameWithoutExtension, "rename ${oldFile.name}") { newDocName ->
+            val renamedFile = oldFile.parentFile.resolve("$newDocName.$labelsExtension")
+            if (!oldFile.renameTo(renamedFile)) {
+                warning("Could not rename", "renaming rile '${oldFile.absolutePath}' to ${renamedFile.name} failed.")
+            }
+            doc.labelsFile.value = renamedFile
+        }
+    }
+
     fun open(file: File) = LabelsDocument().apply {
         labelsFile.value = file
         open(this)
