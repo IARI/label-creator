@@ -2,7 +2,7 @@ import com.github.breadmoirai.githubreleaseplugin.ChangeLogSupplier
 
 val kotlinVersion = "1.3.72"
 val appMainClassName = "com.julianjarecki.ettiketten.app.EttikettenApp"
-version = "0.0.2"
+version = "0.0.3"
 
 plugins {
     id("com.github.johnrengelman.shadow") version "5.1.0"
