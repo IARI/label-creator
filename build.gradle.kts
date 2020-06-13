@@ -1,5 +1,4 @@
 import com.github.breadmoirai.githubreleaseplugin.ChangeLogSupplier
-import org.jetbrains.kotlin.utils.identity
 
 val kotlinVersion = "1.3.72"
 val appMainClassName = "com.julianjarecki.ettiketten.app.EttikettenApp"
@@ -130,17 +129,20 @@ tasks {
 
         body {
             val cl = changelog().call().split("""commit [0-9a-f]{7}\s*Author:\V*\s*Date:\V*\s*""".toRegex())
-            val clstring = cl.flatMap {
-                it.trim()
+            val clstring = cl.flatMap { commit ->
+                commit.trim()
                     .lines()
                     .map {
                         //val match = """(\s+\-)\s*(\S.*)""".toRegex().matchEntire(it)
-                        if (it.startsWith(" ")) {
-                            it.replace("""(\s+[\-\+*])(\S)""".toRegex()) {
-                                it.groups[1]!!.value + " " + it.groups[2]!!.value
+                        when {
+                            it.startsWith(" ") -> {
+                                it.replace("""(\s+[\-\+*])(\S)""".toRegex()) {
+                                    it.groups[1]!!.value + " " + it.groups[2]!!.value
+                                }
                             }
-                        } else if (it.any { !it.isWhitespace() }) "- $it"
-                        else it
+                            it.any { !it.isWhitespace() } -> "- $it"
+                            else -> it
+                        }
                     }
             }.joinToString("\n")
             """
