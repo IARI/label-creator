@@ -6,6 +6,8 @@ import com.julianjarecki.ettiketten.styles.Styles
 import com.julianjarecki.tfxserializer.utils.colorpicker
 import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
+import javafx.scene.control.TextArea
+import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import tornadofx.*
@@ -13,19 +15,28 @@ import tornadofx.*
 class TextContentFragment : ItemFragment<TextContent>() {
     val textContent = TextContentModel().bindTo(this)
 
+    var textField: TextField by singleAssign()
+    var textArea: TextArea by singleAssign()
+
     override val root = vbox {
         hbox {
-            textfield(textContent.text) {
+            textField = textfield(textContent.text) {
                 removeWhen(textContent.multiline)
                 whenVisible {
                     requestFocus()
+                    positionCaret(textArea.caretPosition)
                 }
 
-                this.addEventFilter(KeyEvent.KEY_PRESSED) { ev ->
+                addEventFilter(KeyEvent.KEY_PRESSED) { ev ->
                     if (ev.isShortcutDown || ev.isShiftDown) {
                         when (ev.code) {
                             KeyCode.ENTER -> {
-                                textContent.text.value += "\n"
+                                val oldText = textContent.text.value
+                                val caretPos = caretPosition
+                                textContent.text.value = oldText.replaceRange(
+                                    caretPos..(caretPos - 1), "\n"
+                                )
+                                textArea.positionCaret(caretPos + 1)
                             }
                             else -> {
                             }
@@ -33,12 +44,11 @@ class TextContentFragment : ItemFragment<TextContent>() {
                     }
                 }
             }
-            textarea(textContent.text) {
+            textArea = textarea(textContent.text) {
                 minHeight = 30.0
                 removeWhen(!textContent.multiline)
                 whenVisible {
                     requestFocus()
-                    positionCaret(textContent.text.value.length)
                 }
             }
             colorpicker(textContent.color, ColorPickerMode.MenuButton) {
