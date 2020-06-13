@@ -35,6 +35,11 @@ class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
     val data: LabelsDocumentDataModel by inject()
     val tgroupH = ToggleGroup()
     val tgroupV = ToggleGroup()
+    private val paddingLeftBinding = data.controlLabelV.doubleBinding {
+        log.info("Doc controlLabelV: $it")
+        if (it ?: true) .0 else Styles.labelsLeftBarWidth
+    }
+
 
     val selectedLabels = observableListOf<LabelContent>()
 
@@ -205,12 +210,7 @@ class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
             top {
                 listview(data.columns) {
                     addClass(Styles.gridLineList)
-                    paddingLeftProperty.bind(
-                        data.controlLabelV.doubleBinding {
-                            if (it ?: false) .0 else Styles.labelsLeftBarWidth
-                        }
-                    )
-                    paddingLeft = Styles.labelsLeftBarWidth
+                    paddingLeftProperty.bind(paddingLeftBinding)
                     orientation = Orientation.HORIZONTAL
                     prefHeight = Styles.labelsTopRowHeight
                     cellFragment(GridLineFragment::class)
