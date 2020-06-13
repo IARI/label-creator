@@ -72,7 +72,7 @@ class PdfExportController : Controller() {
                 */
 
                 canvas(eData.ps) {
-                    export(this@pdfDocument, data, eData)
+                    export(data, eData)
                 }
                 close()
             }
@@ -146,7 +146,7 @@ class PdfExportController : Controller() {
         }
     }
 
-    private fun PdfCanvas.export(pdfDoc: PdfDocument, data: LabelsDocumentDataModel, eData: EffectiveLabelsData) {
+    private fun PdfCanvas.export(data: LabelsDocumentDataModel, eData: EffectiveLabelsData) {
         lineJoinStyle = LineJoinStyles.ROUND
         //setFontAndSize(data.font.value.PdfFont, 12f)
 
@@ -164,7 +164,7 @@ class PdfExportController : Controller() {
             val lHeight = eData.rowHeight.getOrElse(row) { eData.rowHeight.last() }
             val enableSubtitle = linkedLabel.enableSubTitle.value
 
-            rectCanvas(pdfDoc, xOffset, -(yOffset + lHeight), lWidth, lHeight, {
+            rectCanvas(xOffset, -(yOffset + lHeight), lWidth, lHeight, {
                 if (data.drawBorder.value) {
                     setLineWidth(border.width)
                     setStrokeColor(data.borderColor.value.iText)

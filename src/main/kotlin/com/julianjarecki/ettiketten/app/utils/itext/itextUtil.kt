@@ -89,7 +89,6 @@ inline fun PdfCanvas.text(op: PdfCanvas.() -> Unit) = apply {
 }
 
 inline fun PdfCanvas.rectCanvas(
-    pdf: PdfDocument,
     x: Float,
     y: Float,
     w: Float,
@@ -97,7 +96,7 @@ inline fun PdfCanvas.rectCanvas(
     opr: Rectangle.() -> Unit = {},
     op: Canvas.() -> Unit = {}
 ) = Rectangle(x, y, w, h).apply(opr).run {
-    Canvas(this@rectCanvas, pdf, this).apply(op).close()
+    Canvas(this@rectCanvas, this).apply(op).close()
 }
 
 val Float.point get() = UnitValue(UnitValue.POINT, this)
