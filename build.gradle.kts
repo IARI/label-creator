@@ -5,7 +5,7 @@ val appMainClassName = "com.julianjarecki.ettiketten.app.EttikettenApp"
 version = "0.0.3"
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "5.1.0"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
     id("kotlinx-serialization") version "1.3.72"
     kotlin("jvm") version "1.3.72"
 
