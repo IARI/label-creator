@@ -170,17 +170,33 @@ class DocumentTab : AppTab("Document", MaterialDesignIcon.LABEL_OUTLINE.view) {
                     }
                 }
             }
-            item("Drawing", icon = MaterialDesignIcon.DRAWING.view, expanded = false) {
+            item("Drawing", icon = MaterialDesignIcon.DRAWING.view, expanded = data.anyDrawingEnabled.value) {
                 form {
                     fieldset {
                         field("Font") {
                             combobox(data.font, Fonts.values().toList())
                         }
-                        togglebutton("Border") {
-                            selectedProperty().bindBidirectional(data.drawBorder)
+                        field("Fontsize mod") {
+                            spinner(
+                                -100.0, 100.0, amountToStepBy = .1, editable = true,
+                                property = data.autoFontSizeMod, enableScroll = true
+                            ) {
+                                prefWidth = 100.0
+                            }
+                        }
+                        hbox {
+                            togglebutton("Border") {
+                                selectedProperty().bindBidirectional(data.drawBorder)
+                            }
+                            togglebutton("Circle") {
+                                selectedProperty().bindBidirectional(data.drawCircle)
+                            }
+                            togglebutton("Mark Center") {
+                                selectedProperty().bindBidirectional(data.markCenter)
+                            }
                         }
                         vbox {
-                            enableWhen(data.drawBorder)
+                            enableWhen(data.anyDrawingEnabled)
                             field {
                                 colorpicker(data.borderColor) {
                                     //prefWidth = 20.0

@@ -2,7 +2,6 @@ package com.julianjarecki.ettiketten.app.controller
 
 import com.itextpdf.kernel.font.PdfFont
 import com.itextpdf.kernel.geom.PageSize
-import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas
 import com.itextpdf.layout.borders.Border
 import com.itextpdf.layout.element.BlockElement
@@ -163,6 +162,22 @@ class PdfExportController : Controller() {
             val lWidth = eData.colWidth[col]
             val lHeight = eData.rowHeight.getOrElse(row) { eData.rowHeight.last() }
             val enableSubtitle = linkedLabel.enableSubTitle.value
+            val centerX = xOffset + lWidth / 2
+            val centerY = yOffset + lHeight / 2
+            val radius = min(lWidth, lHeight) / 2
+            val decreaseInside: Float = if (data.borderInside.value) border.width / 2 else 0f
+
+            if (data.drawCircle.value) {
+                setLineWidth(border.width)
+                setStrokeColor(data.borderColor.value.iText)
+                circle(centerX.toDouble(), -centerY.toDouble(), (radius - decreaseInside).toDouble())
+                stroke()
+            }
+            if (data.markCenter.value) {
+                setStrokeColor(data.borderColor.value.iText)
+                circle(centerX.toDouble(), -centerY.toDouble(), border.width * 3.0)
+                fill()
+            }
 
             rectCanvas(xOffset, -(yOffset + lHeight), lWidth, lHeight, {
                 if (data.drawBorder.value) {
@@ -197,13 +212,26 @@ class PdfExportController : Controller() {
                     setVerticalAlignment(VerticalAlignment.MIDDLE)
                     height = lHeight.point
                     val f = data.font.value.PdfFont
+                    val fontSizeMod = data.autoFontSizeMod.value.toFloat()
                     font = f
 
                     val lHeightTitlePart = if (enableSubtitle) .6f else 1f
-                    renderTextContent(f, linkedLabel.title, lWidth, lHeight * lHeightTitlePart)
+                    renderTextContent(
+                        f,
+                        fontSizeMod,
+                        linkedLabel.title,
+                        lWidth,
+                        lHeight * lHeightTitlePart
+                    )
 
                     if (enableSubtitle) {
-                        renderTextContent(f, linkedLabel.subTitle, lWidth, lHeight * (1 - lHeightTitlePart))
+                        renderTextContent(
+                            f,
+                            fontSizeMod,
+                            linkedLabel.subTitle,
+                            lWidth,
+                            lHeight * (1 - lHeightTitlePart)
+                        )
                     }
                 }
             }
@@ -212,6 +240,7 @@ class PdfExportController : Controller() {
 
     fun BlockElement<*>.renderTextContent(
         font: PdfFont,
+        fontSizeMod: Float,
         textContent: TextContent,
         lwidth: Float,
         lheight: Float
@@ -223,7 +252,7 @@ class PdfExportController : Controller() {
                     textContent.text.value,
                     lwidth * .85f,
                     appSettings.labelFontheightFraction.floatValue() * lheight
-                )
+                ) + fontSizeMod
         } else textContent.size.value.toFloat()
 
         renderTextContent(fontSize, textContent, textContent.text.value)

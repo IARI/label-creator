@@ -69,7 +69,16 @@ class LabelsDocumentData {
     val font = SimpleObjectProperty<Fonts>(Fonts.HELVETICA)
 
     @ContextualSerialization
+    val autoFontSizeMod = SimpleDoubleProperty(.0)
+
+    @ContextualSerialization
     val drawBorder = SimpleBooleanProperty()
+
+    @ContextualSerialization
+    val drawCircle = SimpleBooleanProperty()
+
+    @ContextualSerialization
+    val markCenter = SimpleBooleanProperty()
 
     @ContextualSerialization
     val borderInside = SimpleBooleanProperty()
@@ -122,13 +131,17 @@ class LabelsDocumentDataModel : ItemViewModel<LabelsDocumentData>() {
     val labelHeightU = labelHeight.convertUnits(units)
     val data = bind(LabelsDocumentData::data)
     val dataByUUID = observableMapOf<String, LabelContent>()
-    val drawBorder = bind(LabelsDocumentData::drawBorder)
-    val borderInside = bind(LabelsDocumentData::borderInside)
+    val drawBorder = bind<Boolean, BooleanProperty, SimpleBooleanProperty>(LabelsDocumentData::drawBorder)
+    val borderInside = bind<Boolean, BooleanProperty, SimpleBooleanProperty>(LabelsDocumentData::borderInside)
+    val drawCircle = bind<Boolean, BooleanProperty, SimpleBooleanProperty>(LabelsDocumentData::drawCircle)
+    val markCenter = bind<Boolean, BooleanProperty, SimpleBooleanProperty>(LabelsDocumentData::markCenter)
+    val anyDrawingEnabled = drawBorder.or(drawCircle).or(markCenter)
     val borderWidth = bind<Number, SimpleDoubleProperty, SimpleDoubleProperty>(LabelsDocumentData::borderWidth)
     val borderWidthU = borderWidth.convertUnits(units)
     val borderColor =
         bind<Color, SimpleObjectProperty<Color>, SimpleObjectProperty<Color>>(LabelsDocumentData::borderColor)
     val font = bind<Fonts, SimpleObjectProperty<Fonts>, SimpleObjectProperty<Fonts>>(LabelsDocumentData::font)
+    val autoFontSizeMod  = bind<Number, SimpleDoubleProperty, SimpleDoubleProperty>(LabelsDocumentData::autoFontSizeMod)
     val borderStyle =
         bind<BorderStyle, SimpleObjectProperty<BorderStyle>, SimpleObjectProperty<BorderStyle>>(LabelsDocumentData::borderStyle)
 
